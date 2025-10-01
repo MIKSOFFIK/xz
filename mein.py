@@ -1,63 +1,84 @@
 import sys
 import pygame
 
-
 pygame.init()
-
 clock = pygame.time.Clock()
 
-# Создаём окно Pygame
-window_size = (400, 400)
+# Окно
+window_size = (700, 700)
 screen = pygame.display.set_mode(window_size)
 pygame.display.set_caption('FNae')
 
-# Создаем объект шрифта
+# Шрифт (текст не отрисовывается по требованию, но шрифт оставлен если понадобится)
 font = pygame.font.Font(None, 24)
 
-# Создайте поверхность для кнопки
-button_surface = pygame.Surface((150, 50))
+def creat_button(x: int, y: int, h: int, w: int, text: str)-> pygame.Rect:
+    """создание кнопок с текстом
 
-# Отображение текста на кнопке
-text = font.render("start", True, (0, 0, 0))
-text_rect = text.get_rect(
-    center=(button_surface.get_width() /2, 
-            button_surface.get_height()/2))
+    Args:
+        x (int): X(left) координата
+        y (int): y(top) координата
+        h (int): ширена кнопки
+        w (int): высота кнопки
+        text (str): текст на кнопке
 
-# Создайте объект pygame.Rect, который представляет границы кнопки
-button_rect = pygame.Rect(125, 125, 150, 50)  # Отрегулируйте положение
+    Returns:
+        _pygame.Rect_: класс кнопки
+    """
+    # Создаем поверхность для кнопки (без цветовой заливки кнопки)
+    button_surface = pygame.Surface((h, w), pygame.SRCALPHA)  # поддержка прозрачности
 
-while True:
-    clock.tick(60)
-    screen.fill((155, 255, 155))
+    # Подготовка текста (не отрисовываем его на поверхности по вашему требованию)
+    text_surf = font.render(text, True, (0, 0, 0))
+    text_rect = text_surf.get_rect(center=(button_surface.get_width() / 2,
+                                           button_surface.get_height() / 2))
 
-    # Получаем события из очереди событий
-    for event in pygame.event.get():
-        # Проверьте событие выхода
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+    # Рект кнопки (координаты на экране)
+    button_rect = pygame.Rect(x, y, h, w)
 
-        # Проверяем событие нажатия кнопки мыши
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            # Вызовите функцию on_mouse_button_down()
-            if button_rect.collidepoint(event.pos):
-                print("Button clicked!")
-
-    # Проверьте, находится ли мышь над кнопкой. 
-    # Это создаст эффект наведения кнопки.
+    # Эффект наведения без изменения цвета: отрисуем тонкий контур при наведении
     if button_rect.collidepoint(pygame.mouse.get_pos()):
-        pygame.draw.rect(button_surface, (127, 255, 212), (1, 1, 148, 48))
+        pygame.draw.rect(button_surface, (0, 0, 0, 50), button_surface.get_rect(), 2)  # полупрозрачный контур
     else:
-        pygame.draw.rect(button_surface, (0, 0, 0), (0, 0, 150, 50))
-        pygame.draw.rect(button_surface, (255, 255, 255), (1, 1, 148, 48))
-        pygame.draw.rect(button_surface, (0, 0, 0), (1, 1, 148, 1), 2)
-        pygame.draw.rect(button_surface, (0, 100, 0), (1, 48, 148, 10), 2)
- 
-    # Показать текст кнопки
-    button_surface.blit(text, text_rect)
+        pygame.draw.rect(button_surface, (0, 0, 0, 0), button_surface.get_rect(), 1)  # невидимый/тонкий контур
 
-    # Нарисуйте кнопку на экране
+    # По требованию: не выводим текст на кнопку
+    button_surface.blit(text_surf, text_rect)
+
+    # Рисуем кнопку на экране (поверх прозрачной поверхности будет виден фон окна)
     screen.blit(button_surface, (button_rect.x, button_rect.y))
 
-    # Обновить состояние
-    pygame.display.update()
+    return button_rect
+
+menu=True #указывает на то что игрок в меню 
+plauing=False #указвыает на то что игрок играет
+
+def main():
+    global menu,plauing
+    while True:
+        clock.tick(60)
+        screen.fill((36, 36, 36))  # фон окна
+
+        if menu:
+            exit_button = creat_button(10, 600, 100, 75, "Exit") # создание кнопки
+            start_button = creat_button(10, 540, 100, 75, "Start")
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if exit_button.collidepoint(event.pos):
+                    print("exit")
+                    pygame.quit()
+                    sys.exit()
+                if start_button.collidepoint(event.pos):
+                    menu=False #отключаем меню
+                    plauing=True #включаем игру
+                    print("start")
+
+        pygame.display.update()
+
+if __name__ == "__main__":
+    main()
