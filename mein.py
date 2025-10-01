@@ -7,7 +7,7 @@ clock = pygame.time.Clock()
 # Окно
 window_size = (700, 700)
 screen = pygame.display.set_mode(window_size)
-pygame.display.set_caption('FNae')
+pygame.display.set_caption('FNaE')
 
 # Шрифт (текст не отрисовывается по требованию, но шрифт оставлен если понадобится)
 font = pygame.font.Font(None, 24)
@@ -82,3 +82,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
