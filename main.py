@@ -82,6 +82,8 @@ menu=True #указывает на то что игрок в меню
 plauing=False #указвыает на то что игрок играет
 open_camera=False # указывает на то отрыты ли камеры или нет
 
+number_camera=1
+
 def main():
     global menu, plauing, open_camera
     while True:
@@ -139,8 +141,11 @@ def main():
                         print("open_camera")
                     
                     
-                if open_camera: # тут будет логика камеы
-                    pass
+                if open_camera: # тут логика камеы
+                    sprite(dis_w-30, dis_h-200, 700,500, os.path.join(os.getcwd(), "asets", "plonshet.png"))
+                    if number_camera==1:
+                        sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.jpg"))
+                    
                 else:
                     pass
                     
