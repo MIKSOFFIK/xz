@@ -80,9 +80,10 @@ def music(music_file:str, loop=-1):
 
 menu=True #указывает на то что игрок в меню 
 plauing=False #указвыает на то что игрок играет
+open_camera=False # указывает на то отрыты ли камеры или нет
 
 def main():
-    global menu, plauing
+    global menu, plauing, open_camera
     while True:
         clock.tick(60)
         dis_w, dis_h = pygame.display.get_surface().get_size()
@@ -127,11 +128,21 @@ def main():
                 img = pygame.transform.scale(img, (dis_w, dis_h))# растягиваю на весь экран
                 screen.blit(img, (0,0))
                 
-                open_camera = sprite(dis_w-300, dis_h-10, 150,200, os.path.join(os.getcwd(), "asets", "open_camera.png"))
-                if open_camera.collidepoint(clic_event):
+                open_camera_button = sprite(dis_w-300, dis_h-10, 150,200, os.path.join(os.getcwd(), "asets", "open_camera.png"))
+                if open_camera_button.collidepoint(clic_event):
                     music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
-                    print("open_camera")
+                    if open_camera:
+                        open_camera = False
+                        print("close_camera")    
+                    else:
+                        open_camera = True
+                        print("open_camera")
                     
+                    
+                if open_camera: # тут будет логика камеы
+                    pass
+                else:
+                    pass
                     
         pygame.display.update()
         
