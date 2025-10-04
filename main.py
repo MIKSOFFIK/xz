@@ -12,7 +12,7 @@ clock = pygame.time.Clock()
 # Окно
 window_size = (1100, 800)
 screen = pygame.display.set_mode(window_size)
-pygame.display.set_caption('FNae')
+pygame.display.set_caption('FNaE')
 
 # Шрифт (текст не отрисовывается по требованию, но шрифт оставлен если понадобится)
 font = pygame.font.Font(None, 24)
@@ -150,10 +150,13 @@ def main():
                     # переключения между камерами
                     if button1.collidepoint(clic_event):
                         number_camera = 1
+                        music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
                     if button2.collidepoint(clic_event):
                         number_camera = 2
+                        music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
                     if button3.collidepoint(clic_event):
                         number_camera = 3
+                        music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
 
                     if number_camera == 1:
                         sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "toalets.jpg"))
