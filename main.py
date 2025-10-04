@@ -82,10 +82,10 @@ menu=True #указывает на то что игрок в меню
 plauing=False #указвыает на то что игрок играет
 open_camera=False # указывает на то отрыты ли камеры или нет
 
-number_camera=1
+number_camera = 1
 
 def main():
-    global menu, plauing, open_camera
+    global menu, plauing, open_camera, number_camera
     while True:
         clock.tick(60)
         dis_w, dis_h = pygame.display.get_surface().get_size()
@@ -143,9 +143,18 @@ def main():
                     
                 if open_camera: # тут логика камеры
                     sprite(dis_w-30, dis_h-200, 700,500, os.path.join(os.getcwd(), "asets", "plonshet.png"))
-                    sprite(dis_w - 170, dis_h- 350, 10, 10, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "2.png"))
-                    if number_camera==1:
+                    button2 = sprite(dis_w - 185, dis_h- 350, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "2.png"))
+                    button1 = sprite(dis_w - 150, dis_h- 320, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "1.png"))
+                    if button2.collidepoint(clic_event):
+                        number_camera = 2
+                    if button1.collidepoint(clic_event):
+                        number_camera = 1
+
+                    if number_camera == 1:
                         sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.jpg"))
+                    if number_camera == 2:
+                        sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "toalets.jpg"))
+
                     
                 else:
                     pass
