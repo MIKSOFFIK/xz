@@ -143,17 +143,24 @@ def main():
                     
                 if open_camera: # тут логика камеры
                     sprite(dis_w-30, dis_h-200, 700,500, os.path.join(os.getcwd(), "asets", "plonshet.png"))
-                    button2 = sprite(dis_w - 185, dis_h- 350, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "2.png"))
-                    button1 = sprite(dis_w - 150, dis_h- 320, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "1.png"))
-                    if button2.collidepoint(clic_event):
-                        number_camera = 2
+                    #создание кнопок камеры
+                    button1 = sprite(dis_w - 185, dis_h- 350, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "1.png"))
+                    button2 = sprite(dis_w - 150, dis_h- 320, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "2.png"))
+                    button3 = sprite(dis_w - 86, dis_h- 260, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "3.png"))
+                    # переключения между камерами
                     if button1.collidepoint(clic_event):
                         number_camera = 1
+                    if button2.collidepoint(clic_event):
+                        number_camera = 2
+                    if button3.collidepoint(clic_event):
+                        number_camera = 3
 
                     if number_camera == 1:
-                        sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.jpg"))
-                    if number_camera == 2:
                         sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "toalets.jpg"))
+                    if number_camera == 2:
+                        sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.jpg"))
+                    if number_camera == 3:
+                        sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor.jpg"))
 
                     
                 else:
