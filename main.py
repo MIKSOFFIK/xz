@@ -132,13 +132,14 @@ def main():
                 
                 open_camera_button = sprite(dis_w-300, dis_h-10, 150,200, os.path.join(os.getcwd(), "asets", "open_camera.png"))
                 if open_camera_button.collidepoint(clic_event):
-                    music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
+
                     if open_camera:
                         open_camera = False
                         print("close_camera")    
                     else:
                         open_camera = True
                         print("open_camera")
+                        music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
                     
                     
                 if open_camera: # тут логика камеры
@@ -147,16 +148,24 @@ def main():
                     button1 = sprite(dis_w - 185, dis_h- 350, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "1.png"))
                     button2 = sprite(dis_w - 150, dis_h- 320, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "2.png"))
                     button3 = sprite(dis_w - 86, dis_h- 260, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "3.png"))
+                    button4 = sprite(dis_w - 135, dis_h- 470, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "4.png"))
                     # переключения между камерами
-                    if button1.collidepoint(clic_event):
+                    if button1.collidepoint(clic_event) and number_camera != 1:
                         number_camera = 1
                         music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
-                    if button2.collidepoint(clic_event):
+                        print("cam 1")
+                    if button2.collidepoint(clic_event) and number_camera != 2:
                         number_camera = 2
                         music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
-                    if button3.collidepoint(clic_event):
+                        print("cam 2")
+                    if button3.collidepoint(clic_event) and number_camera != 3:
                         number_camera = 3
                         music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
+                        print("cam 3")
+                    if button4.collidepoint(clic_event) and number_camera != 4:
+                        number_camera = 4
+                        music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
+                        print("cam 4")
 
                     if number_camera == 1:
                         sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "toalets.jpg"))
@@ -164,6 +173,8 @@ def main():
                         sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.jpg"))
                     if number_camera == 3:
                         sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor.jpg"))
+                    if number_camera == 4:
+                        sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "gitler.jpg"))
 
                     
                 else:
