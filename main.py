@@ -114,7 +114,7 @@ def main():
                     button2 = sprite(dis_w - 220, dis_h- 320, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "2.png"))
                     button3 = sprite(dis_w - 200, dis_h- 470, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "3.png"))
                     button4 = sprite(dis_w - 150, dis_h- 260, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "4.png"))
-                    button5 = sprite(dis_w - 240, dis_h- 390, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "4.png"))
+                    button5 = sprite(dis_w - 240, dis_h- 390, 30, 30, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "5.png"))
                     # переключения между камерами
                     if button1.collidepoint(clic_event) and number_camera != 1:
                         number_camera = 1
@@ -124,15 +124,15 @@ def main():
                         number_camera = 2
                         music(os.path.join(os.getcwd(), "asets", "sount", "clic_camers.mp3"), 0)
                         print("cam 2")
-                    if button3.collidepoint(clic_event) and number_camera != 4:
+                    if button3.collidepoint(clic_event) and number_camera != 3:
                         number_camera = 3
                         music(os.path.join(os.getcwd(), "asets", "sount", "clic_camers.mp3"), 0)
                         print("cam 3")
-                    if button4.collidepoint(clic_event) and number_camera != 3:
+                    if button4.collidepoint(clic_event) and number_camera != 4:
                         number_camera = 4
                         music(os.path.join(os.getcwd(), "asets", "sount", "clic_camers.mp3"), 0)
                         print("cam 4")
-                    if button5.collidepoint(clic_event) and number_camera != 4:
+                    if button5.collidepoint(clic_event) and number_camera != 5:
                         number_camera = 5
                         music(os.path.join(os.getcwd(), "asets", "sount", "clic_camers.mp3"), 0)
                         print("cam 5")
@@ -148,7 +148,11 @@ def main():
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "gitler_scena.jpg"))
                     if number_camera == 4:
                         sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor.jpg"))
-
+                    if number_camera == 5:
+                        if position["zal"][0]=="egor":
+                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "test.jpg"))
+                        else:
+                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "test.jpg"))
                 else:
                     pass
                     
