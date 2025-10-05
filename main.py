@@ -84,6 +84,15 @@ open_camera=False # указывает на то отрыты ли камеры 
 
 number_camera=1
 
+
+position={
+    "holl": [],
+    "coredor": [],
+    "zal": [],
+    "toilet": []
+}
+shkatulka=0 # шкатулка гитлера от 0 до 30 
+
 def main():
     global menu, plauing, open_camera
     while True:
@@ -140,10 +149,12 @@ def main():
                         open_camera = True
                         print("open_camera")
                     
-                    
                 if open_camera: # тут логика камеры
                     sprite(dis_w-30, dis_h-200, 700,500, os.path.join(os.getcwd(), "asets", "plonshet.png"))
-                    sprite(dis_w - 170, dis_h- 350, 10, 10, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "2.png"))
+                    camera_2=sprite(dis_w - 170, dis_h - 350, 10, 10, os.path.join(os.getcwd(), "asets", "camers", "cam_button", "2.png"))
+                    if camera_2.collidepoint(clic_event):
+                        music(os.path.join(os.getcwd(), "asets", "sount", "clic_camers.mp3"), 0)
+                        
                     if number_camera==1:
                         sprite(dis_w-270, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.jpg"))
                     
