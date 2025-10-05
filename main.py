@@ -26,12 +26,12 @@ menu=True # указывает на то что игрок в меню
 plauing=False # указывает на то что игрок играет
 open_camera=False # указывает на то отрыты ли камеры или нет
 
-
+'''
 #отладочнный режим
 menu=False 
 plauing=True 
 open_camera=True 
-
+'''
 
 number_camera = 1
 
@@ -166,3 +166,4 @@ if __name__ == "__main__":
     mainf = threading.Thread(main(), daemon=True)
     mainf.start()
     thread.start()
+
