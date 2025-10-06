@@ -8,7 +8,7 @@ class plauing_const():
 CONSTANT=plauing_const()
 
 
-def creat_button(x: int, y: int, h: int, w: int, text: str)-> pygame.Rect:
+def creat_button(x: int, y: int, h: int, w: int, text: str, bord=0, text_color=(0, 0, 0))-> pygame.Rect:
     """создание кнопок с текстом
 
     Args:
@@ -24,13 +24,13 @@ def creat_button(x: int, y: int, h: int, w: int, text: str)-> pygame.Rect:
     # Создаем поверхность для кнопки (без цветовой заливки кнопки)
     button_surface = pygame.Surface((h, w), pygame.SRCALPHA)  # поддержка прозрачности
 
-    # Подготовка текста (не отрисовываем его на поверхности по вашему требованию)
-    text_surf = CONSTANT.font.render(text, True, (0, 0, 0))
+    # Подготовка текста 
+    text_surf = CONSTANT.font.render(text, True, text_color)
     text_rect = text_surf.get_rect(center=(button_surface.get_width() / 2,
                                            button_surface.get_height() / 2))
 
     # Рект кнопки (координаты на экране)
-    button_rect = pygame.Rect(x, y, h, w)
+    button_rect = pygame.Rect(x, y, h, w, border_radius = bord)
 
     # Эффект наведения без изменения цвета: отрисуем тонкий контур при наведении
     if button_rect.collidepoint(pygame.mouse.get_pos()):
@@ -38,7 +38,6 @@ def creat_button(x: int, y: int, h: int, w: int, text: str)-> pygame.Rect:
     else:
         pygame.draw.rect(button_surface, (0, 0, 0, 0), button_surface.get_rect(), 1)  # невидимый/тонкий контур
 
-    # По требованию: не выводим текст на кнопку
     button_surface.blit(text_surf, text_rect)
 
     # Рисуем кнопку на экране (поверх прозрачной поверхности будет виден фон окна)
