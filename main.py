@@ -4,6 +4,7 @@ import os
 import threading
 import time
 import pygame
+import traceback
 
 from creat import *
 
@@ -22,16 +23,19 @@ font = pygame.font.Font(None, 27)
 CONSTANT.font = font
 CONSTANT.screen = screen
 
+stop = threading.Event()
+
 menu=True # указывает на то что игрок в меню
 plauing=False # указывает на то что игрок играет
 open_camera=False # указывает на то отрыты ли камеры или нет
 
 
 #отладочнный режим
+'''
 menu=False 
 plauing=True 
 open_camera=True 
-
+'''
 
 number_camera = 1
 
@@ -47,17 +51,32 @@ shkatulka=95 # шкатулка гитлера от 0 до 95
 hourus=12
 minute=00
 
+
+def num_shkatulka():
+    global shkatulka
+    while not stop.is_set():
+        if shkatulka >= 1:
+            shkatulka=-0.1
+            time.sleep(8)
+            
+def safe_run(name, fn):
+    try:
+        fn()
+    except Exception:
+        print(f"Exception in {name}")
+        traceback.print_exc()
+
+thread = threading.Thread(target=lambda: safe_run("shkatulka", num_shkatulka), daemon=True)  
+thread.start()
+
 def main():
     global menu, plauing, open_camera, number_camera, gitler_logic, shkatulka
     
     while True:
         clock.tick(60)
         dis_w, dis_h = pygame.display.get_surface().get_size()
-        
                 
         for event in pygame.event.get():
-            if shkatulka >= 1:
-                shkatulka=-0.1
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
@@ -171,7 +190,6 @@ def main():
                         progress=round(95 * (progress / 100))
                         
                         pygame.draw.rect(screen, (69,176,16), (dis_w-287, dis_h-552-shkatulka, 35, progress)) 
-                        print(progress)
                         
                     if number_camera == 4:
                         sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor.jpg"))
@@ -190,3 +208,4 @@ def main():
 if __name__ == "__main__": 
     music(os.path.join(os.getcwd(), "asets", "sount", ["menu_embiend_2.mp3", "menu_embiendF.mp3"][random.randint(0,1)]))
     main()
+    
