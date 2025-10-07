@@ -46,7 +46,7 @@ position={
     "zal": ["egor", None],
     "toilet": [None, None]
 }
-shkatulka=95 # шкатулка гитлера от 0 до 95
+shkatulka=1 # шкатулка гитлера от 0 до 95
 
 hourus=12
 minute=00
@@ -57,7 +57,7 @@ def num_shkatulka():
     while not stop.is_set():
         if shkatulka >= 1:
             shkatulka=shkatulka-1
-            time.sleep(1.1-(0.1*night))
+            time.sleep(1.2-(0.2*night))
             
 def safe_run(name, fn):
     try:
@@ -204,9 +204,9 @@ def main():
                         
                     if number_camera == 4:
                         if position["coredor"][0]=="hitler":
-                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor.jpg"))
-                        else:
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor_hitler.png"))
+                        else:
+                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor.jpg"))
                         
                     if number_camera == 5:
                         if position["zal"][0]=="egor":
@@ -216,7 +216,8 @@ def main():
                             
                 #логика для шкатулки
                 if shkatulka <= 0:
-                    position["holl"]=[None,None]
+                    position["holl"] = [None,None]
+                    position["coredor"] = ["hitler",None]
                     
         pygame.display.update()
         
