@@ -13,7 +13,7 @@ pygame.mixer.init()
 clock = pygame.time.Clock()
 
 # Окно
-window_size = (1100, 800)
+window_size = (1200, 900)
 screen = pygame.display.set_mode(window_size)
 pygame.display.set_caption('FNaE')
 
@@ -38,7 +38,7 @@ open_camera=True
 '''
 
 number_camera = 1
-
+night=1
 
 position={
     "holl": ["hitler", None],
@@ -56,8 +56,8 @@ def num_shkatulka():
     global shkatulka
     while not stop.is_set():
         if shkatulka >= 1:
-            shkatulka=-0.1
-            time.sleep(8)
+            shkatulka=shkatulka-1
+            time.sleep(1.1-(0.1*night))
             
 def safe_run(name, fn):
     try:
@@ -93,10 +93,10 @@ def main():
                 
             if menu:
                 screen.fill((36, 36, 36))  # фон окна
-                poshalco = sprite(dis_w,dis_h,200,150, os.path.join(os.getcwd(), "asets", "egorka.png"))
+                poshalco = sprite(dis_w,dis_h, 200, 150, os.path.join(os.getcwd(), "asets", "egorka.png"))
                 
-                exit_button = creat_button(10, 700, 100, 75, "Exit") # создание кнопки
-                start_button = creat_button(10, 628, 100, 75, "Start")
+                exit_button = creat_button(dis_w-1200, dis_h-85, 100, 75, "Exit") # создание кнопки
+                start_button = creat_button(dis_w-1200, dis_h-160, 100, 75, "Start")
                 if exit_button.collidepoint(clic_event):
                     print("exit")
                     pygame.quit()
@@ -116,11 +116,22 @@ def main():
                 img = pygame.transform.scale(img, (dis_w, dis_h))# растягиваю на весь экран
                 screen.blit(img, (0,0))
                 
-                print_text(dis_w-50, dis_h-790, f"{hourus}:{minute}")# время
+                print_text(dis_w-80, dis_h-900, f"{hourus}:{minute}")# время
                 
                 open_camera_button = sprite(dis_w-0, dis_h-170, 150,200, os.path.join(os.getcwd(), "asets", "open_camera.png"))
+                
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        if open_camera:
+                            open_camera = False
+                            print("close_camera")    
+                            music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
+                        else:
+                            open_camera = True
+                            print("open_camera")
+                            music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
+                        
                 if open_camera_button.collidepoint(clic_event):
-
                     if open_camera:
                         open_camera = False
                         print("close_camera")    
@@ -179,7 +190,7 @@ def main():
                             
                         #шактулка
                         shcatulka_clic=creat_button(dis_w-250, dis_h-584, 30, 35, "^^^" ,20 ,text_color=(87, 8, 8))
-                        pygame.draw.rect(screen, (64,64,64), (dis_w-290, dis_h-650, 40, 100))
+                        pygame.draw.rect(screen, (64,64,64), (dis_w-290, dis_h-652, 41, 105))
                         
                         if shcatulka_clic.collidepoint(clic_event):
                             if shkatulka<95:
@@ -192,14 +203,20 @@ def main():
                         pygame.draw.rect(screen, (69,176,16), (dis_w-287, dis_h-552-shkatulka, 35, progress)) 
                         
                     if number_camera == 4:
-                        sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor.jpg"))
+                        if position["coredor"][0]=="hitler":
+                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor.jpg"))
+                        else:
+                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor_hitler.png"))
                         
                     if number_camera == 5:
                         if position["zal"][0]=="egor":
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "test.jpg"))
                         else:
                             sprite(dis_w-310, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "test.jpg"))
-
+                            
+                #логика для шкатулки
+                if shkatulka <= 0:
+                    position["holl"]=[None,None]
                     
         pygame.display.update()
         
