@@ -46,11 +46,19 @@ position={
     "zal": ["egor", None],
     "toilet": [None, None]
 }
-shkatulka=1 # шкатулка гитлера от 0 до 95
+shkatulka=95 # шкатулка гитлера от 0 до 95
 
 hourus=12
 minute=00
 
+def timer():
+    global hourus, minute
+    while not stop.is_set():
+        if minute>=60:
+            minute=0
+            hourus=hourus+1
+        minute=minute+1
+        time.sleep(5+(0.1*night))
 
 def num_shkatulka():
     global shkatulka
@@ -65,9 +73,11 @@ def safe_run(name, fn):
     except Exception:
         print(f"Exception in {name}")
         traceback.print_exc()
-
-thread = threading.Thread(target=lambda: safe_run("shkatulka", num_shkatulka), daemon=True)  
-thread.start()
+        
+shk_thread = threading.Thread(target=lambda: safe_run("shkatulka", num_shkatulka), daemon=True)  
+shk_thread.start()
+timer_thread = threading.Thread(target=lambda: safe_run("timers", timer), daemon=True)  
+timer_thread.start()
 
 def main():
     global menu, plauing, open_camera, number_camera, gitler_logic, shkatulka
@@ -116,7 +126,8 @@ def main():
                 img = pygame.transform.scale(img, (dis_w, dis_h))# растягиваю на весь экран
                 screen.blit(img, (0,0))
                 
-                print_text(dis_w-80, dis_h-900, f"{hourus}:{minute}")# время
+                # время
+                print_text(dis_w-80, dis_h-900, f"{hourus}:{minute}")
                 
                 open_camera_button = sprite(dis_w-0, dis_h-170, 150,200, os.path.join(os.getcwd(), "asets", "open_camera.png"))
                 
@@ -163,6 +174,7 @@ def main():
                     if button3.collidepoint(clic_event) and number_camera != 3:
                         number_camera = 3
                         music(os.path.join(os.getcwd(), "asets", "sount", "clic_camers.mp3"), 0)
+                        time.sleep(0.1)
                         music(os.path.join(os.getcwd(), "asets", "sount", "Was_wollen_wir_trinken.mp3"), 0)
                         print("cam 3")
                         
@@ -210,9 +222,9 @@ def main():
                         
                     if number_camera == 5:
                         if position["zal"][0]=="egor":
-                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "test.jpg"))
+                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "egor_na_scrne.jpg"))
                         else:
-                            sprite(dis_w-310, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "test.jpg"))
+                            sprite(dis_w-310, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "scena_egora.jpg"))
                             
                 #логика для шкатулки
                 if shkatulka <= 0:
