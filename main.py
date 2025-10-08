@@ -52,20 +52,22 @@ hourus=12
 minute=00
 
 def timer():
-    global hourus, minute
+    global hourus, minute, plauing
     while not stop.is_set():
-        if minute>=60:
-            minute=0
-            hourus=hourus+1
-        minute=minute+1
-        time.sleep(5+(0.1*night))
+        if plauing:
+            if minute>=60:
+                minute=0
+                hourus=hourus+1
+            minute=minute+1
+            time.sleep(5+(0.1*night))
 
 def num_shkatulka():
-    global shkatulka
+    global shkatulka,plauing
     while not stop.is_set():
-        if shkatulka >= 1:
-            shkatulka=shkatulka-1
-            time.sleep(1.2-(0.2*night))
+        if plauing:
+            if shkatulka >= 1:
+                shkatulka=shkatulka-1
+                time.sleep(1.2-(0.2*night))
             
 def safe_run(name, fn):
     try:
