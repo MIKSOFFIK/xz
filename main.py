@@ -38,13 +38,15 @@ open_camera=True
 '''
 
 number_camera = 1
+
 night=1
 
 position={
     "holl": ["hitler", None],
     "coredor": [None, None],
     "zal": ["egor", None],
-    "toilet": [None, None]
+    "toilet": [None, None],
+    "offise": None
 }
 shkatulka=95 # шкатулка гитлера от 0 до 95
 
@@ -68,6 +70,32 @@ def num_shkatulka():
             if shkatulka >= 1:
                 shkatulka=shkatulka-1
                 time.sleep(1.2-(0.2*night))
+                
+def game_over():
+    print("game over :(")# написать логику
+
+def muving_logic():
+    global shkatulka, plauing, night, position
+    while not stop.is_set():
+        if plauing:
+            if shkatulka <= 0:
+                    position["holl"] = [None, None]
+                    position["coredor"] = ["hitler", None]
+
+            if "egor" in position["zal"] and random.randint(0 ,7-night) == 0:
+                position["zal"] = [None,None]
+                position["toilet"] = ["egor", None] # надо будет сделать случайную вариотивность возможного перемещения
+                
+            if "hitler" in position["coredor"] and random.randint(0, 2) == 1:
+                position["coredor"]=[None, None]
+                position["offise"]="hitler"
+                
+                
+            if position["offise"]: # прроигрыш
+                game_over()
+                
+            time.sleep(8-(round(night/5, 2)))
+            print(position, 8-(round(night/4, 2)))
             
 def safe_run(name, fn):
     try:
@@ -79,6 +107,8 @@ def safe_run(name, fn):
 shk_thread = threading.Thread(target=lambda: safe_run("shkatulka", num_shkatulka), daemon=True)  
 shk_thread.start()
 timer_thread = threading.Thread(target=lambda: safe_run("timers", timer), daemon=True)  
+timer_thread.start()
+timer_thread = threading.Thread(target=lambda: safe_run("move_logic", muving_logic), daemon=True)  
 timer_thread.start()
 
 def main():
@@ -226,12 +256,8 @@ def main():
                         if position["zal"][0]=="egor":
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "egor_na_scrne.jpg"))
                         else:
-                            sprite(dis_w-310, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "scena_egora.jpg"))
-                            
-                #логика для шкатулки
-                if shkatulka <= 0:
-                    position["holl"] = [None,None]
-                    position["coredor"] = ["hitler",None]
+                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "scena_egora.jpg"))
+
                     
         pygame.display.update()
         
