@@ -61,7 +61,7 @@ def timer():
                 minute=0
                 hourus=hourus+1
             minute=minute+1
-            time.sleep(5+(0.1*night))
+            time.sleep(4+(0.1*night))
 
 def num_shkatulka():
     global shkatulka,plauing
@@ -79,15 +79,15 @@ def muving_logic():
     while not stop.is_set():
         if plauing:
             if shkatulka <= 0:
-                    position["holl"] = [None, None]
-                    position["coredor"] = ["hitler", None]
+                    position["holl"][0] = None
+                    position["coredor"][1] = "hitler"
 
             if "egor" in position["zal"] and random.randint(0 ,7-night) == 0:
-                position["zal"] = [None,None]
-                position["toilet"] = ["egor", None] # надо будет сделать случайную вариотивность возможного перемещения
+                position["zal"][0] = None
+                position["toilet"][0] = "egor" # надо будет сделать случайную вариотивность возможного перемещения
                 
             if "hitler" in position["coredor"] and random.randint(0, 2) == 1:
-                position["coredor"]=[None, None]
+                position["coredor"][1] = None
                 position["offise"]="hitler"
                 
                 
