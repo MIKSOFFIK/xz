@@ -46,7 +46,8 @@ position={
     "coredor": [None, None],
     "zal": ["egor", None],
     "toilet": [None, None],
-    "offise": None
+    "offise": None,
+    "main_prohod_ofise":None
 }
 shkatulka=95 # шкатулка гитлера от 0 до 95
 
@@ -85,6 +86,12 @@ def muving_logic():
             if "egor" in position["zal"] and random.randint(0 ,7-night) == 0:
                 position["zal"][0] = None
                 position["toilet"][0] = "egor" # надо будет сделать случайную вариотивность возможного перемещения
+                
+            if "egor" in position["toilet"] or position["holl"]:
+                position["toilet"][0],position["holl"][0] = None,None
+                position["zal"][0] = "egor"
+                time.sleep(1)
+                position["main_prohod_ofise"]="egor"
                 
             if "hitler" in position["coredor"] and random.randint(0, 2) == 1:
                 position["coredor"][1] = None
