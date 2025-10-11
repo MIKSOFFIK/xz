@@ -42,13 +42,14 @@ number_camera = 1
 night=1
 
 position={
-    "holl": ["hitler", None],
-    "coredor": [None, None],
-    "zal": ["egor", None],
-    "toilet": [None, None],
+    "holl": [None, "hitler"],
+    "coredor":  [None, None],
+    "zal":    ["egor", None],
+    "toilet":   [None, None],
     "offise": None,
     "main_prohod_ofise":None
 }
+
 shkatulka=95 # шкатулка гитлера от 0 до 95
 
 hourus=12
@@ -80,22 +81,22 @@ def muving_logic():
     while not stop.is_set():
         if plauing:
             if shkatulka <= 0:
-                    position["holl"][0] = None
+                    position["holl"][1] = None
                     position["coredor"][1] = "hitler"
 
-            if "egor" in position["zal"] and random.randint(0 ,7-night) == 0:
+            if "egor" == position["zal"][0] and random.randint(0 ,7-night)==0:
                 position["zal"][0] = None
                 position["toilet"][0] = "egor" # надо будет сделать случайную вариотивность возможного перемещения
-                
-            if "egor" in position["toilet"] or position["holl"]:
-                position["toilet"][0],position["holl"][0] = None,None
+            if "egor" == position["toilet"][0] or "egor" == position["holl"][0] and random.randint(1 ,6-night)==1:
+                position["toilet"][0] = None
+                position["holl"][0] = None
                 position["zal"][0] = "egor"
                 time.sleep(1)
-                position["main_prohod_ofise"]="egor"
+                position["main_prohod_ofise"] = "egor"
                 
-            if "hitler" in position["coredor"] and random.randint(0, 2) == 1:
+            if "hitler" == position["coredor"][1] and random.randint(0, 2) == 1:
                 position["coredor"][1] = None
-                position["offise"]="hitler"
+                position["offise"] = "hitler"
                 
                 
             if position["offise"]: # прроигрыш
@@ -234,7 +235,7 @@ def main():
                         sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.jpg"))
                         
                     if number_camera == 3:
-                        if position["holl"][0]=="hitler":
+                        if position["holl"][1]=="hitler":
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "gitler.jpg"))
                         else:
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "gitler_scena.jpg"))
@@ -254,7 +255,7 @@ def main():
                         pygame.draw.rect(screen, (69,176,16), (dis_w-287, dis_h-552-shkatulka, 35, progress)) 
                         
                     if number_camera == 4:
-                        if position["coredor"][0]=="hitler":
+                        if position["coredor"][1]=="hitler":
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor_hitler.png"))
                         else:
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor.jpg"))
