@@ -44,11 +44,11 @@ night=1
 
 position={
     "holl": [None, "hitler"],
-    "coredor":  [None, None],
-    "zal":    ["egor", None],
-    "toilet":   [None, None],
+    "coredor": [None, None],
+    "zal": ["egor", None],
+    "toilet": [None, None],
     "offise": None,
-    "main_prohod_ofise":None
+    "main_prohod_ofise": None
 }
 
 shkatulka=95 # шкатулка гитлера от 0 до 95
@@ -57,6 +57,8 @@ hourus=12
 minute=00
 
 bolon_cd=0
+timers=False
+triger=False
 
 def timer():
     global hourus, minute, plauing
@@ -80,7 +82,7 @@ def game_over():
     print("game over :(")# написать логику
 
 def muving_logic():
-    global shkatulka, plauing, night, position
+    global shkatulka, plauing, night, position, timers, triger
     while not stop.is_set():
         if plauing:
             if shkatulka <= 0:
@@ -101,6 +103,12 @@ def muving_logic():
             if "hitler" == position["coredor"][1] and random.randint(0, 3) == 1:
                 position["coredor"][1] = None
                 position["offise"] = "hitler"
+            
+            if position['main_prohod_ofise']:
+                if not timers:
+                    timers=True
+                if triger:
+                    pass
                 
             if position["offise"]: # прроигрыш
                 game_over()
@@ -110,10 +118,18 @@ def muving_logic():
             
 def osvegitel_cd():
     global bolon_cd
-    while True:
+    while not stop.is_set():
         if bolon_cd>0:
             bolon_cd=bolon_cd-0.1
             time.sleep(0.1)
+
+def timer_sleep():
+    global timers, triger
+    while not stop.is_set():
+        if timers:
+            time.sleep(20-night)
+            triger=True
+            timers=False
             
 def safe_run(name, fn):
     try:
@@ -130,9 +146,11 @@ move_thread = threading.Thread(target=lambda: safe_run("move_logic", muving_logi
 move_thread.start()
 cd_thread = threading.Thread(target=lambda: safe_run("osvegitel_cd", osvegitel_cd), daemon=True)  
 cd_thread.start()
+timer_sleept = threading.Thread(target=lambda: safe_run("thread_time_sleep", timer_sleep), daemon=True)  
+timer_sleept.start()
 
 def main():
-    global menu, plauing, open_camera, number_camera, gitler_logic, shkatulka, bolon_cd
+    global menu, plauing, open_camera, number_camera, shkatulka, bolon_cd
     
     while True:
         clock.tick(60)
@@ -249,12 +267,12 @@ def main():
                         
                         #fuck_egorka=creat_button(dis_w-250, dis_h-584, 30, 35, "отпугнуть" ,20 ,text_color=(0, 0, 0))
                         pygame.draw.rect(screen, (31,31,31), (dis_w-300, dis_h-588, 100, 40))
-                        fuck_egorka=creat_button(dis_w-300, dis_h-584, 100, 35, "отпугнуть" ,40 ,text_color=(0, 0, 0))
-                        if fuck_egorka.collidepoint(clic_event):
-                            if bolon_cd<=0:
-                                music(os.path.join(os.getcwd(), "asets", "sount", "hipenie.mp3"), 0)
-                                bolon_cd=5
-                                print("отпугивание егора")
+                        if bolon_cd<=0:
+                            fuck_egorka=creat_button(dis_w-300, dis_h-584, 100, 35, "отпугнуть" ,40 ,text_color=(0, 0, 0))
+                            if fuck_egorka.collidepoint(clic_event):
+                                    music(os.path.join(os.getcwd(), "asets", "sount", "hipenie.mp3"), 0)
+                                    bolon_cd=5
+                                    print("отпугивание егора")
                                 
                         if bolon_cd>0:
                             pygame.draw.rect(screen, (115,115,115), (dis_w-300, dis_h-550-bolon_cd*10, 100, bolon_cd*10))
