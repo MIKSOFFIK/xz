@@ -24,6 +24,7 @@ CONSTANT.font = font
 CONSTANT.screen = screen
 
 stop = threading.Event()
+random.seed(time.time()*int(sys.api_version))
 
 menu=True # указывает на то что игрок в меню
 plauing=False # указывает на то что игрок играет
@@ -54,6 +55,8 @@ shkatulka=95 # шкатулка гитлера от 0 до 95
 
 hourus=12
 minute=00
+
+bolon_cd=0
 
 def timer():
     global hourus, minute, plauing
@@ -87,23 +90,30 @@ def muving_logic():
             if "egor" == position["zal"][0] and random.randint(0 ,7-night)==0:
                 position["zal"][0] = None
                 position["toilet"][0] = "egor" # надо будет сделать случайную вариотивность возможного перемещения
-            if "egor" == position["toilet"][0] or "egor" == position["holl"][0] and random.randint(1 ,6-night)==1:
+                
+            if "egor" == position["toilet"][0] or "egor" == position["holl"][0] and random.randint(0 ,10-night)==1:
                 position["toilet"][0] = None
                 position["holl"][0] = None
                 position["zal"][0] = "egor"
                 time.sleep(1)
                 position["main_prohod_ofise"] = "egor"
                 
-            if "hitler" == position["coredor"][1] and random.randint(0, 2) == 1:
+            if "hitler" == position["coredor"][1] and random.randint(0, 3) == 1:
                 position["coredor"][1] = None
                 position["offise"] = "hitler"
-                
                 
             if position["offise"]: # прроигрыш
                 game_over()
                 
             time.sleep(8-(round(night/5, 2)))
             print(position, 8-(round(night/4, 2)))
+            
+def osvegitel_cd():
+    global bolon_cd
+    while True:
+        if bolon_cd>0:
+            bolon_cd=bolon_cd-0.1
+            time.sleep(0.1)
             
 def safe_run(name, fn):
     try:
@@ -116,11 +126,13 @@ shk_thread = threading.Thread(target=lambda: safe_run("shkatulka", num_shkatulka
 shk_thread.start()
 timer_thread = threading.Thread(target=lambda: safe_run("timers", timer), daemon=True)  
 timer_thread.start()
-timer_thread = threading.Thread(target=lambda: safe_run("move_logic", muving_logic), daemon=True)  
-timer_thread.start()
+move_thread = threading.Thread(target=lambda: safe_run("move_logic", muving_logic), daemon=True)  
+move_thread.start()
+cd_thread = threading.Thread(target=lambda: safe_run("osvegitel_cd", osvegitel_cd), daemon=True)  
+cd_thread.start()
 
 def main():
-    global menu, plauing, open_camera, number_camera, gitler_logic, shkatulka
+    global menu, plauing, open_camera, number_camera, gitler_logic, shkatulka, bolon_cd
     
     while True:
         clock.tick(60)
@@ -232,7 +244,20 @@ def main():
                         sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "toalets.jpg"))
                         
                     if number_camera == 2:
-                        sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.jpg"))
+                        if not position["main_prohod_ofise"]:
+                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.jpg"))
+                        
+                        #fuck_egorka=creat_button(dis_w-250, dis_h-584, 30, 35, "отпугнуть" ,20 ,text_color=(0, 0, 0))
+                        pygame.draw.rect(screen, (31,31,31), (dis_w-300, dis_h-588, 100, 40))
+                        fuck_egorka=creat_button(dis_w-300, dis_h-584, 100, 35, "отпугнуть" ,40 ,text_color=(0, 0, 0))
+                        if fuck_egorka.collidepoint(clic_event):
+                            if bolon_cd<=0:
+                                music(os.path.join(os.getcwd(), "asets", "sount", "hipenie.mp3"), 0)
+                                bolon_cd=5
+                                print("отпугивание егора")
+                                
+                        if bolon_cd>0:
+                            pygame.draw.rect(screen, (115,115,115), (dis_w-300, dis_h-550-bolon_cd*10, 100, bolon_cd*10))
                         
                     if number_camera == 3:
                         if position["holl"][1]=="hitler":
