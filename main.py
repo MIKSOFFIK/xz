@@ -110,6 +110,7 @@ def muving_logic():
                 if triger:
                     pass
                 
+                
             if position["offise"]: # прроигрыш
                 game_over()
                 
