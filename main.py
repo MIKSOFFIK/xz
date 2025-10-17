@@ -266,7 +266,6 @@ def main():
                         if not position["main_prohod_ofise"]:
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.jpg"))
                         
-                        #fuck_egorka=creat_button(dis_w-250, dis_h-584, 30, 35, "отпугнуть" ,20 ,text_color=(0, 0, 0))
                         pygame.draw.rect(screen, (31,31,31), (dis_w-300, dis_h-588, 100, 40))
                         if bolon_cd<=0:
                             fuck_egorka=creat_button(dis_w-300, dis_h-584, 100, 35, "отпугнуть" ,40 ,text_color=(0, 0, 0))
@@ -274,6 +273,13 @@ def main():
                                     music(os.path.join(os.getcwd(), "asets", "sount", "hipenie.mp3"), 0)
                                     bolon_cd=5
                                     print("отпугивание егора")
+                                    if position["main_prohod_ofise"]=="egor":
+                                        position["main_prohod_ofise"]=None
+                                        position["holl"][0]="egor"
+                                        
+                                    elif position["coredor"][0]=="egor":
+                                        position["coredor"][0]=None
+                                        position["holl"][0]="egor"
                                 
                         if bolon_cd>0:
                             pygame.draw.rect(screen, (115,115,115), (dis_w-300, dis_h-550-bolon_cd*10, 100, bolon_cd*10))
