@@ -104,12 +104,14 @@ def muving_logic():
                 position["coredor"][1] = None
                 position["offise"] = "hitler"
             
-            if position['main_prohod_ofise']:
+            if position['main_prohod_ofise']: # гавнокод!!!!!
                 if not timers:
                     timers=True
                 if triger:
-                    pass
-                
+                    if position['main_prohod_ofise']:
+                        # здесь должна быть анимация скримера
+                        time.sleep(3)
+                        game_over()
                 
             if position["offise"]: # прроигрыш
                 game_over()
