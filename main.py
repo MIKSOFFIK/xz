@@ -40,7 +40,7 @@ open_camera=True
 
 number_camera = 1
 
-night=1
+NIGHT=1
 
 position={
     "holl": [None, "hitler"],
@@ -55,10 +55,8 @@ shkatulka=95 # шкатулка гитлера от 0 до 95
 
 hourus=12
 minute=00
-
 bolon_cd=0
-timers=False
-triger=False
+
 
 def timer():
     global hourus, minute, plauing
@@ -68,7 +66,7 @@ def timer():
                 minute=0
                 hourus=hourus+1
             minute=minute+1
-            time.sleep(4+(0.1*night))
+            time.sleep(4+(0.1*NIGHT))
 
 def num_shkatulka():
     global shkatulka,plauing
@@ -76,63 +74,77 @@ def num_shkatulka():
         if plauing:
             if shkatulka >= 1:
                 shkatulka=shkatulka-1
-                time.sleep(1.2-(0.2*night))
+                time.sleep(1.2-(0.2*NIGHT))
                 
 def game_over():
     print("game over :(")# написать логику
-
+    
+class Move_unit_logic():
+    def __init__(self):
+        self.timers=False
+        self.triger=False
+    
+    def timer(self):
+        if not self.timers:
+            self.timers=True
+        return self.triger
+            
+logic=Move_unit_logic()
+        
 def muving_logic():
-    global shkatulka, plauing, night, position, timers, triger
+    global shkatulka, plauing, NIGHT, position
     while not stop.is_set():
         if plauing:
             if shkatulka <= 0:
                     position["holl"][1] = None
                     position["coredor"][1] = "hitler"
 
-            if "egor" == position["zal"][0] and random.randint(0 ,7-night)==0:
+            if "egor" == position["zal"][0] and random.randint(0 ,10-NIGHT)==0:
+                position["holl"][0] = None
                 position["zal"][0] = None
-                position["toilet"][0] = "egor" # надо будет сделать случайную вариотивность возможного перемещения
                 
-            if "egor" == position["toilet"][0] or "egor" == position["holl"][0] and random.randint(0 ,10-night)==1:
+                random_num=random.randint(0,1) # сомнительно может не заработать 
+                if random_num==0:
+                    position["toilet"][0] = "egor"
+                else:
+                    position["holl"][0] = "egor"
+                
+            if "egor" == position["toilet"][0] or "egor" == position["holl"][0] and random.randint(0 ,13-NIGHT)==1:
                 position["toilet"][0] = None
                 position["holl"][0] = None
-                position["zal"][0] = "egor"
+                position["zal"][0] = None
                 time.sleep(1)
                 position["main_prohod_ofise"] = "egor"
                 
-            if "hitler" == position["coredor"][1] and random.randint(0, 3) == 1:
+            if "hitler" == position["coredor"][1] and random.randint(0, 6-NIGHT) == 1:
                 position["coredor"][1] = None
                 position["offise"] = "hitler"
             
-            if position['main_prohod_ofise']: # гавнокод!!!!!
-                if not timers:
-                    timers=True
-                if triger:
-                    if position['main_prohod_ofise']:
-                        # здесь должна быть анимация скримера
-                        time.sleep(3)
-                        game_over()
+            if position['main_prohod_ofise']:
+                if logic.timer() and position['main_prohod_ofise']:
+                    time.sleep(3)
+                    position["offise"] = True
                 
             if position["offise"]: # прроигрыш
+                # здесь должна быть анимация скримера
                 game_over()
                 
-            time.sleep(8-(round(night/5, 2)))
-            print(position, 8-(round(night/4, 2)))
+            time.sleep(8-(round(NIGHT/5, 2)))
+            print(position, 8-(round(NIGHT/4, 2)))
             
 def osvegitel_cd():
     global bolon_cd
-    while not stop.is_set():
+    while True:
         if bolon_cd>0:
             bolon_cd=bolon_cd-0.1
             time.sleep(0.1)
 
 def timer_sleep():
-    global timers, triger
     while not stop.is_set():
-        if timers:
-            time.sleep(20-night)
-            triger=True
-            timers=False
+        if logic.timers:
+            time.sleep(20-NIGHT)
+            logic.triger=True
+            logic.timers=False
             
 def safe_run(name, fn):
     try:
@@ -270,18 +282,18 @@ def main():
                         
                         pygame.draw.rect(screen, (31,31,31), (dis_w-300, dis_h-588, 100, 40))
                         if bolon_cd<=0:
-                            fuck_egorka=creat_button(dis_w-300, dis_h-584, 100, 35, "отпугнуть" ,40 ,text_color=(0, 0, 0))
+                            fuck_egorka=creat_button(dis_w-300, dis_h-584, 100, 35, "отпугнуть", 40, text_color=(0, 0, 0))
                             if fuck_egorka.collidepoint(clic_event):
                                     music(os.path.join(os.getcwd(), "asets", "sount", "hipenie.mp3"), 0)
                                     bolon_cd=5
                                     print("отпугивание егора")
                                     if position["main_prohod_ofise"]=="egor":
                                         position["main_prohod_ofise"]=None
-                                        position["holl"][0]="egor"
+                                        position["zal"][0]="egor"
                                         
                                     elif position["coredor"][0]=="egor":
                                         position["coredor"][0]=None
-                                        position["holl"][0]="egor"
+                                        position["zal"][0]="egor"
                                 
                         if bolon_cd>0:
                             pygame.draw.rect(screen, (115,115,115), (dis_w-300, dis_h-550-bolon_cd*10, 100, bolon_cd*10))
