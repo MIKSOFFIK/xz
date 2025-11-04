@@ -207,7 +207,7 @@ def main():
                 
             if plauing:
                 #фон
-                img = pygame.image.load(os.path.join(os.getcwd(), "asets", "offise.jpg")).convert_alpha()
+                img = pygame.image.load(os.path.join(os.getcwd(), "asets", "offise_2.jpg")).convert_alpha()
                 img = pygame.transform.scale(img, (dis_w, dis_h))# растягиваю на весь экран
                 screen.blit(img, (0,0))
                 
@@ -278,7 +278,9 @@ def main():
                         
                     if number_camera == 2:
                         if not position["main_prohod_ofise"]:
-                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.jpg"))
+                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.png"))
+                        else:
+                            sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "egor_in_holl.png"))
                         
                         pygame.draw.rect(screen, (31,31,31), (dis_w-300, dis_h-588, 100, 40))
                         if bolon_cd<=0:
