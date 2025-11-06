@@ -1,36 +1,17 @@
 import sys
 import random
 import os
-import threading
 import time
 import pygame
-import traceback
+from dataclasses import dataclass
 
 from creat import *
+from workers import start_process
 
-pygame.init()
-pygame.mixer.init()
-clock = pygame.time.Clock()
-
-# Окно
-window_size = (1200, 900)
-screen = pygame.display.set_mode(window_size)
-pygame.display.set_caption('FNaE')
-
-# Шрифт (текст не отрисовывается по требованию, но шрифт оставлен если понадобится)
-font = pygame.font.Font(None, 27)
-
-CONSTANT.font = font
-CONSTANT.screen = screen
-
-stop = threading.Event()
 random.seed(time.time()*int(sys.api_version))
 
 menu=True # указывает на то что игрок в меню
-plauing=False # указывает на то что игрок играет
 open_camera=False # указывает на то отрыты ли камеры или нет
-
-
 #отладочнный режим
 '''
 menu=False 
@@ -40,132 +21,47 @@ open_camera=True
 
 number_camera = 1
 
-NIGHT=1
 
-position={
+@dataclass
+class Game_data:
+    shkatulka=95 # шкатулка гитлера от 0 до 95
+    plauing=False # указывает на то что игрок играет
+    gameover=False
+    hourus=12
+    minute=00
+    bolon_cd=0
+    NIGHT=1
+    
+    position={
     "holl": [None, "hitler"],
     "coredor": [None, None],
     "zal": ["egor", None],
     "toilet": [None, None],
     "offise": None,
     "main_prohod_ofise": None
-}
+    }
 
-shkatulka=95 # шкатулка гитлера от 0 до 95
-
-hourus=12
-minute=00
-bolon_cd=0
-
-
-def timer():
-    global hourus, minute, plauing
-    while not stop.is_set():
-        if plauing:
-            if minute>=60:
-                minute=0
-                hourus=hourus+1
-            minute=minute+1
-            time.sleep(4+(0.1*NIGHT))
-
-def num_shkatulka():
-    global shkatulka,plauing
-    while not stop.is_set():
-        if plauing:
-            if shkatulka >= 1:
-                shkatulka=shkatulka-1
-                time.sleep(1.2-(0.2*NIGHT))
-                
-def game_over():
-    print("game over :(")# написать логику
-    
-class Move_unit_logic():
-    def __init__(self):
-        self.timers=False
-        self.triger=False
-    
-    def timer(self):
-        if not self.timers:
-            self.timers=True
-        return self.triger
-            
-logic=Move_unit_logic()
-        
-def muving_logic():
-    global shkatulka, plauing, NIGHT, position
-    while not stop.is_set():
-        if plauing:
-            if shkatulka <= 0:
-                    position["holl"][1] = None
-                    position["coredor"][1] = "hitler"
-
-            if "egor" == position["zal"][0] and random.randint(0 ,10-NIGHT)==0:
-                position["holl"][0] = None
-                position["zal"][0] = None
-                
-                random_num=random.randint(0,1) # сомнительно может не заработать 
-                if random_num==0:
-                    position["toilet"][0] = "egor"
-                else:
-                    position["holl"][0] = "egor"
-                
-            if "egor" == position["toilet"][0] or "egor" == position["holl"][0] and random.randint(0 ,13-NIGHT)==1:
-                position["toilet"][0] = None
-                position["holl"][0] = None
-                position["zal"][0] = None
-                time.sleep(1)
-                position["main_prohod_ofise"] = "egor"
-                
-            if "hitler" == position["coredor"][1] and random.randint(0, 6-NIGHT) == 1:
-                position["coredor"][1] = None
-                position["offise"] = "hitler"
-            
-            if position['main_prohod_ofise']:
-                if logic.timer() and position['main_prohod_ofise']:
-                    time.sleep(3)
-                    position["offise"] = True
-                
-            if position["offise"]: # прроигрыш
-                # здесь должна быть анимация скримера
-                game_over()
-                
-            time.sleep(8-(round(NIGHT/5, 2)))
-            print(position, 8-(round(NIGHT/4, 2)))
-            
-def osvegitel_cd():
-    global bolon_cd
-    while True:
-        if bolon_cd>0:
-            bolon_cd=bolon_cd-0.1
-            time.sleep(0.1)
-
-def timer_sleep():
-    while not stop.is_set():
-        if logic.timers:
-            time.sleep(20-NIGHT)
-            logic.triger=True
-            logic.timers=False
-            
-def safe_run(name, fn):
-    try:
-        fn()
-    except Exception:
-        print(f"Exception in {name}")
-        traceback.print_exc()
-        
-shk_thread = threading.Thread(target=lambda: safe_run("shkatulka", num_shkatulka), daemon=True)  
-shk_thread.start()
-timer_thread = threading.Thread(target=lambda: safe_run("timers", timer), daemon=True)  
-timer_thread.start()
-move_thread = threading.Thread(target=lambda: safe_run("move_logic", muving_logic), daemon=True)  
-move_thread.start()
-cd_thread = threading.Thread(target=lambda: safe_run("osvegitel_cd", osvegitel_cd), daemon=True)  
-cd_thread.start()
-timer_sleept = threading.Thread(target=lambda: safe_run("thread_time_sleep", timer_sleep), daemon=True)  
-timer_sleept.start()
+main_data=Game_data()
 
 def main():
-    global menu, plauing, open_camera, number_camera, shkatulka, bolon_cd
+    global menu, open_camera, number_camera
+    
+    #mein init
+    pygame.init()
+    pygame.mixer.init()
+    clock = pygame.time.Clock()
+
+    # Окно
+    window_size = (1200, 900)
+    screen = pygame.display.set_mode(window_size)
+    pygame.display.set_caption('FNaE')
+
+    # Шрифт (текст не отрисовывается по требованию, но шрифт оставлен если понадобится)
+    font = pygame.font.Font(None, 27)
+
+    CONSTANT.font = font
+    CONSTANT.screen = screen
+    music(os.path.join(os.getcwd(), "asets", "sount", ["menu_embiend_2.mp3", "menu_embiendF.mp3"][random.randint(0,1)]))
     
     while True:
         clock.tick(60)
@@ -179,7 +75,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:# открытие меню по нажатию на esc
                     menu=True 
-                    plauing=False
+                    main_data.plauing=False
                     
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:# это костыль за за которого теперь нельзя выставлять кнопки на координаты 0.0 0.0
                 clic_event=event.pos
@@ -199,20 +95,20 @@ def main():
                     
                 if start_button.collidepoint(clic_event):
                     menu=False #отключаем меню
-                    plauing=True #включаем игру
+                    main_data.plauing=True #включаем игру
                     print("start")   
                     
                 if poshalco.collidepoint(clic_event):
                     print("пасхлка")# доделать
                 
-            if plauing:
+            if main_data.plauing:
                 #фон
                 img = pygame.image.load(os.path.join(os.getcwd(), "asets", "offise_2.jpg")).convert_alpha()
                 img = pygame.transform.scale(img, (dis_w, dis_h))# растягиваю на весь экран
                 screen.blit(img, (0,0))
                 
                 # время
-                print_text(dis_w-80, dis_h-900, f"{hourus}:{minute}")
+                print_text(dis_w-80, dis_h-900, f"{main_data.hourus}:{main_data.minute}")
                 
                 open_camera_button = sprite(dis_w-0, dis_h-170, 150,200, os.path.join(os.getcwd(), "asets", "open_camera.png"))
                 
@@ -277,67 +173,69 @@ def main():
                         sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "toalets.jpg"))
                         
                     if number_camera == 2:
-                        if not position["main_prohod_ofise"]:
+                        if not main_data.position["main_prohod_ofise"]:
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.png"))
                         else:
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "egor_in_holl.png"))
                         
                         pygame.draw.rect(screen, (31,31,31), (dis_w-300, dis_h-588, 100, 40))
-                        if bolon_cd<=0:
+                        if main_data.bolon_cd<=0:
                             fuck_egorka=creat_button(dis_w-300, dis_h-584, 100, 35, "отпугнуть", 40, text_color=(0, 0, 0))
                             if fuck_egorka.collidepoint(clic_event):
                                     music(os.path.join(os.getcwd(), "asets", "sount", "hipenie.mp3"), 0)
-                                    bolon_cd=5
+                                    main_data.bolon_cd=5
                                     print("отпугивание егора")
-                                    if position["main_prohod_ofise"]=="egor":
-                                        position["main_prohod_ofise"]=None
-                                        position["zal"][0]="egor"
+                                    if main_data.position["main_prohod_ofise"]=="egor":
+                                        main_data.position["main_prohod_ofise"]=None
+                                        main_data.position["zal"][0]="egor"
                                         
-                                    elif position["coredor"][0]=="egor":
-                                        position["coredor"][0]=None
-                                        position["zal"][0]="egor"
+                                    elif main_data.position["coredor"][0]=="egor":
+                                        main_data.position["coredor"][0]=None
+                                        main_data.position["zal"][0]="egor"
                                 
-                        if bolon_cd>0:
-                            pygame.draw.rect(screen, (115,115,115), (dis_w-300, dis_h-550-bolon_cd*10, 100, bolon_cd*10))
+                        if main_data.bolon_cd>0:
+                            pygame.draw.rect(screen, (115,115,115), (dis_w-300, dis_h-550-main_data.bolon_cd*10, 100, main_data.bolon_cd*10))
                         
                     if number_camera == 3:
-                        if position["holl"][1]=="hitler":
+                        if main_data.position["holl"][1]=="hitler":
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "gitler.jpg"))
                         else:
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "gitler_scena.jpg"))
                             
-                        #шактулка
+                        # шактулка
                         shcatulka_clic=creat_button(dis_w-250, dis_h-584, 30, 35, "^^^" ,20 ,text_color=(87, 8, 8))
-                        pygame.draw.rect(screen, (64,64,64), (dis_w-290, dis_h-652, 41, 105))
+                        pygame.draw.rect(screen, (64,64,64), (dis_w-290, dis_h-653, 41, 105))
                         
                         if shcatulka_clic.collidepoint(clic_event):
-                            if shkatulka<95:
-                                shkatulka+=5
-                                print(f"заряд шкатулки> {shkatulka}")
+                            if main_data.shkatulka<95:
+                                main_data.shkatulka+=5
+                                print(f"заряд шкатулки> {main_data.shkatulka}")
                         # вундер вафля форимрубщия проценты
-                        progress=(shkatulka / 95) * 100 if 95 > 0 else 0
+                        progress=(main_data.shkatulka / 95) * 100 if 95 > 0 else 0
                         progress=round(95 * (progress / 100))
                         
-                        pygame.draw.rect(screen, (69,176,16), (dis_w-287, dis_h-552-shkatulka, 35, progress)) 
+                        pygame.draw.rect(screen, (69,176,16), (dis_w-287, dis_h-552-main_data.shkatulka, 35, progress)) 
                         
                     if number_camera == 4:
-                        if position["coredor"][1]=="hitler":
+                        if main_data.position["coredor"][1]=="hitler":
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor_hitler.png"))
                         else:
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "coredor.jpg"))
                         
                     if number_camera == 5:
-                        if position["zal"][0]=="egor":
+                        if main_data.position["zal"][0]=="egor":
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "egor_na_scrne.jpg"))
                         else:
                             sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "scena_egora.jpg"))
-
+                
+            if main_data.gameover:pass
+            # логика проигрыша 
                     
         pygame.display.update()
         
         
 
 if __name__ == "__main__": 
-    music(os.path.join(os.getcwd(), "asets", "sount", ["menu_embiend_2.mp3", "menu_embiendF.mp3"][random.randint(0,1)]))
+    main_data=start_process()
     main()
     
