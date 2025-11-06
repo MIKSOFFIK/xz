@@ -2,8 +2,9 @@ import sys
 import random
 import os
 import time
+import json
+
 import pygame
-from dataclasses import dataclass
 
 from creat import *
 from workers import start_process
@@ -12,38 +13,30 @@ random.seed(time.time()*int(sys.api_version))
 
 menu=True # указывает на то что игрок в меню
 open_camera=False # указывает на то отрыты ли камеры или нет
-#отладочнный режим
-'''
-menu=False 
-plauing=True 
-open_camera=True 
-'''
-
 number_camera = 1
 
-
-@dataclass
-class Game_data:
-    shkatulka=95 # шкатулка гитлера от 0 до 95
-    plauing=False # указывает на то что игрок играет
-    gameover=False
-    hourus=12
-    minute=00
-    bolon_cd=0
-    NIGHT=1
+def save(night, save_file='save.json'):
+    with open(save_file,'w') as f:
+        json.dump({"night":night}, f)
+        
+def read_save(save_file='save.json')->dict:
+    with open(save_file,'r') as f:
+        j=json.load(f)
+    return j
     
-    position={
-    "holl": [None, "hitler"],
-    "coredor": [None, None],
-    "zal": ["egor", None],
-    "toilet": [None, None],
-    "offise": None,
-    "main_prohod_ofise": None
-    }
+def settings(configuranion: dict|None ,config_file='settings.json')->dict:
+    '''работа с файлом настроек'''
+    if configuranion:
+        with open(config_file,'w') as f:
+            json.dump(configuranion, f)
+        return configuranion
+    
+    else:
+        with open(config_file,'r') as f:
+            j=json.load(f)
+        return j
 
-main_data=Game_data()
-
-def main():
+def main(main_data):
     global menu, open_camera, number_camera
     
     #mein init
@@ -234,8 +227,7 @@ def main():
         pygame.display.update()
         
         
-
 if __name__ == "__main__": 
     main_data=start_process()
-    main()
+    main(main_data)
     

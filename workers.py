@@ -14,14 +14,14 @@ def timer(main_data):
                 hourus += 1
             main_data.minute = minute
             main_data.hourus = hourus
-        time.sleep(3 + (0.1 * getattr(main_data, "NIGHT", 1)))
+        time.sleep(2 + max(3, main_data.NIGHT/5))
 
 def num_shkatulka(main_data):
     while True:
         if main_data.plauing:
-            if getattr(main_data, "shkatulka", 0) >= 1:
+            if main_data.shkatulka >= 1:
                 main_data.shkatulka = main_data.shkatulka - 1
-            time.sleep(max(0.05, 1.2 - (0.2 * getattr(main_data, "NIGHT", 1))))
+            time.sleep(2 - (main_data.NIGHT/5))
 
 
 def game_over(main_data):
@@ -41,7 +41,6 @@ class Move_unit_logic:
         return self.ns._logic_triger
 
 def muving_logic(main_data):
-    random.seed(time.time()*os.getpid())
     while True:
         if main_data.plauing:
             if getattr(main_data, "shkatulka", 0) <= 0:
@@ -55,14 +54,15 @@ def muving_logic(main_data):
                     main_data.position["toilet"][0] = "egor"
                 else:
                     main_data.position["holl"][0] = "egor"
+                print("egor muving 1")
 
-            cond = (main_data.position["toilet"][0] == "egor") or (main_data.position["holl"][0] == "egor")
-            if cond and random.randint(0, max(1, 13 - main_data.NIGHT)) == 1:
+            if main_data.position["toilet"][0] == "egor" or main_data.position["holl"][0] == "egor" and random.randint(0,  13 - main_data.NIGHT) == 1:
                 main_data.position["toilet"][0] = None
                 main_data.position["holl"][0] = None
                 main_data.position["zal"][0] = None
                 time.sleep(1)
                 main_data.position["main_prohod_ofise"] = "egor"
+                print("egor muving 2")
 
 
             if main_data.position["coredor"][1] == "hitler" and random.randint(0, max(1, 6 - main_data.NIGHT)) == 1:
@@ -97,6 +97,7 @@ def timer_sleep(main_data):
             time.sleep(0.2)
 
 def start_process():
+    random.seed(time.time()*os.getpid())
     mgr = Manager()
     shared = mgr.Namespace()
     shared.shkatulka = 95
@@ -130,7 +131,4 @@ def start_process():
     print(mgr, shared, [p1,p2,p3,p4,p5])
     return shared
 
-if __name__ == '__main__':
-    print("started")
-    start_process()
     
