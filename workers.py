@@ -3,6 +3,8 @@ import time
 import random
 import os
 
+from creat import music_vlc
+
 def timer(main_data):
     while True:
         if main_data.plauing:
@@ -16,15 +18,15 @@ def timer(main_data):
                 hourus=0
             main_data.minute = minute
             main_data.hourus = hourus
-        time.sleep(1 + max(2, main_data.NIGHT/5))
+        time.sleep(1 + max(2.5, main_data.NIGHT/5))
 
 
 def num_shkatulka(main_data):
     while True:
         if main_data.plauing:
             if main_data.shkatulka >= 1:
-                main_data.shkatulka = main_data.shkatulka - 1
-            time.sleep(2 - (main_data.NIGHT/5))
+                main_data.shkatulka = main_data.shkatulka - max(5, 1 + (main_data.NIGHT/5))
+            time.sleep(max(0.5, 2 - (main_data.NIGHT/5)))
 
 
 def game_over(main_data):
@@ -101,6 +103,9 @@ def timer_sleep(main_data):
             t._logic_timers = False
         else:
             time.sleep(0.2)
+            
+def music():
+    music_vlc(os.path.join(os.getcwd(), "asets", "sount", ["menu_embiend_2.mp3", "menu_embiendF.mp3"][random.randint(0,1)]), -1 ,75)
 
 def start_process():
     random.seed(time.time()*os.getpid())
@@ -127,8 +132,9 @@ def start_process():
     p3 = Process(name="muving_logic_FNaE", target=muving_logic, args=(shared,), daemon=True)
     p4 = Process(name="osvegitel_cd_FNaE", target=osvegitel_cd, args=(shared,), daemon=True)
     p5 = Process(name="timer_sleep_FNaE", target=timer_sleep, args=(shared,), daemon=True)
+    p6 = Process(name="music_FNaE", target=music, daemon=True)
 
-    p1.start(); p2.start(); p3.start(); p4.start(); p5.start()
+    p1.start(); p2.start(); p3.start(); p4.start(); p5.start(); p6.start()
     
     #print("procs started:", [(p.name, p.pid, p.is_alive()) for p in (p1,p2,p3,p4,p5)]) 
     print(mgr, shared, [p1,p2,p3,p4,p5])

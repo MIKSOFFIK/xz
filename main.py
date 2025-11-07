@@ -54,14 +54,15 @@ def main(main_data, process):
 
     CONSTANT.font = font
     CONSTANT.screen = screen
-    music(os.path.join(os.getcwd(), "asets", "sount", ["menu_embiend_2.mp3", "menu_embiendF.mp3"][random.randint(0,1)]))
+    #music(os.path.join(os.getcwd(), "asets", "sount", ["menu_embiend_2.mp3", "menu_embiendF.mp3"][random.randint(0,1)]))
     
-    clic_temp=None
+    prev_mouse_down=None
     
     while True:
         clock.tick(60)
         dis_w, dis_h = pygame.display.get_surface().get_size()
-
+        clic_event=None
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 for i in process:
@@ -74,19 +75,23 @@ def main(main_data, process):
                     menu=True 
                     main_data.plauing=False
                 if event.key == pygame.K_SPACE:
-                    if open_camera:
-                        open_camera = False
-                        print("close_camera")    
-                        music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
-                    else:
-                        open_camera = True
-                        print("open_camera")
-                        music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
-                    
-        if pygame.mouse.get_pressed()[0]: # pygame.event.poll().type == pygame.MOUSEBUTTONDOWN
-            clic_event  = pygame.mouse.get_pos()
-        else:
-            clic_event  = None
+                    if main_data.plauing:
+                        if open_camera:
+                            open_camera = False
+                            print("close_camera")    
+                            music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
+                        else:
+                            open_camera = True
+                            print("open_camera")
+                            music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                clic_event = event.pos
+                
+        mouse_down = pygame.mouse.get_pressed()[0]
+        if mouse_down and not prev_mouse_down and clic_event is None:
+            print(1)
+            clic_event = pygame.mouse.get_pos()
+        prev_mouse_down = mouse_down
         
         if menu:
             screen.fill((36, 36, 36))  # фон окна
@@ -96,6 +101,8 @@ def main(main_data, process):
             start_button = creat_button(dis_w-1200, dis_h-160, 100, 75, "Start")
             if  clic_event and exit_button.collidepoint(clic_event):
                 print("exit")
+                for i in process:
+                    i.terminate()
                 pygame.quit()
                 sys.exit()
                 

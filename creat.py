@@ -1,4 +1,6 @@
 import pygame
+import vlc
+import time
 
 class plauing_const():
     def __init__(self):
@@ -72,3 +74,33 @@ def print_text(x:int, y:int, text:str, color=(0, 0, 0), font_size=28):
     font = pygame.font.Font(None, font_size)
     text_surface = font.render(text, True, color)
     CONSTANT.screen.blit(text_surface, (x,y))
+    
+    
+def music_vlc(music_file:str, loop=1, volume=50):
+    """запуск музыки
+
+    Args:
+        music_file (str): путь до файла
+        loop (int, optional): соличество раз воспроизведения -1 бесконечное воспроизведения. Defaults to 1.
+        volume (int, optional): громкость. Defaults to 50.
+    """
+    # Создаём инстанс VLC (без параметров окна)
+    instance = vlc.Instance('--no-video', '--quiet')
+
+    player = instance.media_player_new()
+    media = instance.media_new(music_file)
+    player.set_media(media)
+
+    # Опционально: установить громкость (0-100)
+    player.audio_set_volume(volume)
+
+    player.play()
+
+    while True:
+        state = player.get_state()
+        if state in (vlc.State.Ended, vlc.State.Stopped, vlc.State.Error):
+            if loop>0 or loop==-1:
+                player.stop()
+                player.play()
+                loop=loop-1
+        time.sleep(0.2)
