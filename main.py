@@ -36,7 +36,7 @@ def settings(configuranion: dict|None ,config_file='settings.json')->dict:
             j=json.load(f)
         return j
 
-def main(main_data):
+def main(main_data, process):
     global menu, open_camera, number_camera
     
     #mein init
@@ -62,9 +62,11 @@ def main(main_data):
                 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                for i in process:
+                    i.terminate()
                 pygame.quit()
                 sys.exit()
-            
+                
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:# открытие меню по нажатию на esc
                     menu=True 
@@ -228,6 +230,6 @@ def main(main_data):
         
         
 if __name__ == "__main__": 
-    main_data=start_process()
-    main(main_data)
+    main_data, process = start_process()
+    main(main_data, process)
     

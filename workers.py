@@ -78,7 +78,10 @@ def muving_logic(main_data):
 
         sleep_time = max(0.1, 8 - round(main_data.NIGHT / 4, 1))
         time.sleep(sleep_time)
-        print(main_data.position, sleep_time)
+        temp=''
+        for i in list(main_data.position.keys()):
+            temp=temp+i
+        print(temp, sleep_time)
 
 
 def osvegitel_cd(main_data):
@@ -108,10 +111,10 @@ def start_process():
     shared.bolon_cd = 0
     shared.NIGHT = 1
     shared.position = mgr.dict({
-        "holl": [None, "hitler"],
-        "coredor": [None, None],
-        "zal": ["egor", None],
-        "toilet": [None, None],
+        "holl": mgr.list([None, "hitler"]),
+        "coredor": mgr.list([None, None]),
+        "zal": mgr.list(["egor", None]),
+        "toilet": mgr.list([None, None]),
         "offise": None,
         "main_prohod_ofise": None
     })
@@ -119,16 +122,16 @@ def start_process():
     shared._logic_timers = False
     shared._logic_triger = False
 
-    p1 = Process(target=num_shkatulka, args=(shared,), daemon=True)
-    p2 = Process(target=timer, args=(shared,), daemon=True)
-    p3 = Process(target=muving_logic, args=(shared,), daemon=True)
-    p4 = Process(target=osvegitel_cd, args=(shared,), daemon=True)
-    p5 = Process(target=timer_sleep, args=(shared,), daemon=True)
+    p1 = Process(name="num_shkatulka_FNaE", target=num_shkatulka, args=(shared,), daemon=True)
+    p2 = Process(name="timer_FNaE", target=timer, args=(shared,), daemon=True)
+    p3 = Process(name="muving_logic_FNaE", target=muving_logic, args=(shared,), daemon=True)
+    p4 = Process(name="osvegitel_cd_FNaE", target=osvegitel_cd, args=(shared,), daemon=True)
+    p5 = Process(name="timer_sleep_FNaE", target=timer_sleep, args=(shared,), daemon=True)
 
     p1.start(); p2.start(); p3.start(); p4.start(); p5.start()
     
     #print("procs started:", [(p.name, p.pid, p.is_alive()) for p in (p1,p2,p3,p4,p5)]) 
     print(mgr, shared, [p1,p2,p3,p4,p5])
-    return shared
+    return shared, [p1,p2,p3,p4,p5]
 
     
