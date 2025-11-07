@@ -68,6 +68,7 @@ def music(music_file:str, loop=-1):
     pygame.mixer.music.load(music_file)
     pygame.mixer.music.play(loops=loop)
     
-def print_text(x:int, y:int, text:str ,color=(0, 0, 0)):
-    text_surface = CONSTANT.font.render(text, True, color)
+def print_text(x:int, y:int, text:str, color=(0, 0, 0), font_size=28):
+    font = pygame.font.Font(None, font_size)
+    text_surface = font.render(text, True, color)
     CONSTANT.screen.blit(text_surface, (x,y))
