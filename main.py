@@ -16,11 +16,11 @@ open_camera=False # указывает на то отрыты ли камеры 
 number_camera = 1
 
 def save(night, save_file='save.json'):
-    with open(save_file,'w') as f:
-        json.dump({"night":night}, f)
+    with open(os.path.join(os.getcwd(), save_file), 'w') as f:
+        f.write(json.dumps({"night":night}))
         
 def read_save(save_file='save.json')->dict:
-    with open(save_file,'r') as f:
+    with open(os.path.join(os.getcwd(), save_file), 'r') as f:
         j=json.load(f)
     return j
     
@@ -36,6 +36,21 @@ def settings(configuranion: dict|None ,config_file='settings.json')->dict:
             j=json.load(f)
         return j
 
+def restart(process):
+    """restart game"""
+    
+    for i in process:
+        i.terminate()
+    main_data, process = start_process()
+    
+    global menu, open_camera, number_camera
+    menu=True 
+    open_camera=False 
+    number_camera = 1
+    
+    return main_data, process
+
+    
 def main(main_data, process):
     global menu, open_camera, number_camera
     
@@ -57,6 +72,12 @@ def main(main_data, process):
     #music(os.path.join(os.getcwd(), "asets", "sount", ["menu_embiend_2.mp3", "menu_embiendF.mp3"][random.randint(0,1)]))
     
     prev_mouse_down=None
+    
+    if not os.path.isfile("save.json"):
+        save(1)
+    else:
+        data=read_save()
+        main_data.NIGHT=data["night"]
     
     while True:
         clock.tick(60)
@@ -89,7 +110,6 @@ def main(main_data, process):
                 
         mouse_down = pygame.mouse.get_pressed()[0]
         if mouse_down and not prev_mouse_down and clic_event is None:
-            print(1)
             clic_event = pygame.mouse.get_pos()
         prev_mouse_down = mouse_down
         
@@ -158,7 +178,8 @@ def main(main_data, process):
                     number_camera = 3
                     music(os.path.join(os.getcwd(), "asets", "sount", "clic_camers.mp3"), 0)
                     time.sleep(0.1)
-                    music(os.path.join(os.getcwd(), "asets", "sount", "Was_wollen_wir_trinken.mp3"), 0)
+                    if main_data.shkatulka > 0:
+                        music(os.path.join(os.getcwd(), "asets", "sount", "Was_wollen_wir_trinken.mp3"), 0)
                     print("cam 3")
                     
                 if  clic_event and button4.collidepoint(clic_event) and number_camera != 4:
@@ -230,8 +251,34 @@ def main(main_data, process):
                     else:
                         sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "scena_egora.jpg"))
             
-        if main_data.gameover:pass
-        # логика проигрыша 
+        if main_data.gameover:# логика проигрыша 
+            img = pygame.image.load(os.path.join(os.getcwd(), "asets", "game_over.jpg")).convert_alpha()
+            img = pygame.transform.scale(img, (dis_w, dis_h))# растягиваю на весь экран
+            main_data.plauing=False
+            screen.blit(img, (0,0))
+            pygame.display.update()
+            time.sleep(1)
+            music(os.path.join(os.getcwd(), "asets", "sount", "game_over.mp3"), loop=1)
+            time.sleep(5)
+            main_data, process = restart(process)
+            main_data.gameover=False
+
+        if main_data.hourus == 6:
+            print("win!")
+            main_data.plauing=False
+
+            nig=read_save()["night"]
+            save(nig+1)
+            
+            img = pygame.image.load(os.path.join(os.getcwd(), "asets", "game_over.jpg")).convert_alpha()
+            img = pygame.transform.scale(img, (dis_w, dis_h))# растягиваю на весь экран
+            screen.blit(img, (0,0))
+            pygame.display.update()
+            time.sleep(1)
+            music(os.path.join(os.getcwd(), "asets", "sount", "ypeeee.mp3"), loop=1)
+            time.sleep(5)
+            
+            main_data, process = restart(process)
                     
         pygame.display.update()
         

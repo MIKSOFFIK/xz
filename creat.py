@@ -47,7 +47,7 @@ def creat_button(x: int, y: int, h: int, w: int, text: str, bord=0, text_color=(
 
     return button_rect
 
-def sprite(x:int, y:int, h:int, w:int, file_name:str):
+def sprite(x:int, y:int, h:int, w:int, file_name:str, transform=False) -> pygame.Surface:
     """отрисовка справйтов и реогирование на нажатие
 
     Args:
@@ -56,12 +56,15 @@ def sprite(x:int, y:int, h:int, w:int, file_name:str):
         h (int): ширена
         w (int): высота
         file_name (str): имя картинки(путь да нее)
+        transform (bool): будет ли изменяться разрешение обекта 
 
     Returns:
         _class_: Surface
     """
     img = pygame.image.load(file_name).convert_alpha()
     img_r = img.get_rect(bottomright=(x, y))
+    if transform:
+        img=pygame.transform.scale(img, (h, w)) # изменение размера
     #img.set_colorkey((255, 255, 255))
     CONSTANT.screen.blit(img, img_r)
     return img_r
