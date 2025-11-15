@@ -269,16 +269,17 @@ def main(main_data, process):
 
             nig=read_save()["night"]
             save(nig+1)
-            
             img = pygame.image.load(os.path.join(os.getcwd(), "asets", "win.png")).convert_alpha()
             img = pygame.transform.scale(img, (dis_w, dis_h))# растягиваю на весь экран
             screen.blit(img, (0,0))
+            print_text(dis_w-610, dis_h-500, f"5-{nig+1}", color=(184, 134, 11))
             pygame.display.update()
             time.sleep(1)
             music(os.path.join(os.getcwd(), "asets", "sount", "ypeeee.mp3"), loop=1)
             time.sleep(5)
             
             main_data, process = restart(process)
+            main_data.hourus=12
                     
         pygame.display.update()
         
