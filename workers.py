@@ -18,7 +18,7 @@ def timer(main_data):
                 hourus=0
             main_data.minute = minute
             main_data.hourus = hourus
-        time.sleep(0.5 + max(2.5, main_data.NIGHT/5))
+        time.sleep(0.5 + max(2.5, main_data.NIGHT/5 - 0.1))
 
 
 def num_shkatulka(main_data):
@@ -26,7 +26,7 @@ def num_shkatulka(main_data):
         if main_data.plauing:
             if main_data.shkatulka >= 1:
                 main_data.shkatulka = main_data.shkatulka - max(5, 1 + (main_data.NIGHT/5))
-            time.sleep(max(0.5, 2 - (main_data.NIGHT/5)))
+            time.sleep(max(0.5, 3 - (main_data.NIGHT/5)))
 
 
 def game_over(main_data):

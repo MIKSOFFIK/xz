@@ -37,7 +37,7 @@ def settings(configuranion: dict|None ,config_file='settings.json')->dict:
         return j
 
 def restart(process):
-    """restart game"""
+    """**restart game**"""
     
     for i in process:
         i.terminate()
@@ -63,6 +63,9 @@ def main(main_data, process):
     window_size = (1200, 900)
     screen = pygame.display.set_mode(window_size)
     pygame.display.set_caption('FNaE')
+    
+    programIcon = pygame.image.load(os.path.join(os.getcwd(), "asets", "egorka.png"))
+    pygame.display.set_icon(programIcon)
 
     # Шрифт (текст не отрисовывается по требованию, но шрифт оставлен если понадобится)
     font = pygame.font.Font(None, 28)
@@ -132,7 +135,8 @@ def main(main_data, process):
                 print("start")   
                 
             if  clic_event and poshalco.collidepoint(clic_event):
-                print("пасхлка")# доделать
+                print("пасхлка")
+                music(os.path.join(os.getcwd(), "asets", "sount", "perdeh.mp3"), 1)
             
         if main_data.plauing:
             #фон
@@ -154,7 +158,7 @@ def main(main_data, process):
                     open_camera = True
                     print("open_camera")
                     music(os.path.join(os.getcwd(), "asets", "sount", "blip.mp3"), 0)
-                
+            
             if open_camera: # тут логика камеры
                 sprite(dis_w-100, dis_h-200, 700,500, os.path.join(os.getcwd(), "asets", "plonshet.png"))
                 #создание кнопок камеры
@@ -167,6 +171,8 @@ def main(main_data, process):
                 if  clic_event and button1.collidepoint(clic_event) and number_camera != 1:
                     number_camera = 1
                     music(os.path.join(os.getcwd(), "asets", "sount", "clic_camers.mp3"), 0)
+                    if random.randint(0,15)==0 and main_data.position["toilet"][0] or main_data.position["toilet"][1]:
+                        music(os.path.join(os.getcwd(), "asets", "sount", "perdeh.mp3"), 1)
                     print("cam 1")
                     
                 if  clic_event and button2.collidepoint(clic_event) and number_camera != 2:
@@ -263,7 +269,7 @@ def main(main_data, process):
             main_data, process = restart(process)
             main_data.gameover=False
 
-        if main_data.hourus == 6:
+        if main_data.hourus == 6: # выйгрыш
             print("win!")
             main_data.plauing=False
 
