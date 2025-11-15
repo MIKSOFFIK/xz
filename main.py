@@ -270,7 +270,7 @@ def main(main_data, process):
             nig=read_save()["night"]
             save(nig+1)
             
-            img = pygame.image.load(os.path.join(os.getcwd(), "asets", "game_over.jpg")).convert_alpha()
+            img = pygame.image.load(os.path.join(os.getcwd(), "asets", "win.png")).convert_alpha()
             img = pygame.transform.scale(img, (dis_w, dis_h))# растягиваю на весь экран
             screen.blit(img, (0,0))
             pygame.display.update()

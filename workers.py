@@ -18,7 +18,7 @@ def timer(main_data):
                 hourus=0
             main_data.minute = minute
             main_data.hourus = hourus
-        time.sleep(1 + max(2.5, main_data.NIGHT/5))
+        time.sleep(0.5 + max(2.5, main_data.NIGHT/5))
 
 
 def num_shkatulka(main_data):
