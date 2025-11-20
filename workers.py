@@ -1,4 +1,5 @@
 from multiprocessing import Process, Manager
+import multiprocessing
 import time
 import random
 import os
@@ -109,6 +110,7 @@ def music():
 
 def start_process():
     random.seed(time.time()*os.getpid())
+    multiprocessing.freeze_support()
     mgr = Manager()
     shared = mgr.Namespace()
     shared.shkatulka = 95
