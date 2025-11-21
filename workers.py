@@ -58,6 +58,8 @@ def muving_logic(main_data):
                 main_data.position["zal"][0] = None
                 if random.randint(0, 1) == 0:
                     main_data.position["toilet"][0] = "egor"
+                    if not main_data.egor_in_toalet:
+                        main_data.egor_in_toalet=True
                 else:
                     main_data.position["holl"][0] = "egor"
 
@@ -128,6 +130,7 @@ def start_process():
         "offise": None,
         "main_prohod_ofise": None
     })
+    shared.egor_in_toalet=False
 
     p1 = Process(name="num_shkatulka_FNaE", target=num_shkatulka, args=(shared,), daemon=True)
     p2 = Process(name="timer_FNaE", target=timer, args=(shared,), daemon=True)

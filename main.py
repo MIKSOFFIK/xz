@@ -199,8 +199,10 @@ def main(main_data, process):
                     print("cam 5")
 
                 if number_camera == 1:
-                    sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "toalets.jpg"))
-                    
+                    if not main_data.egor_in_toalet:
+                        sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "toalets.jpg"))
+                    else:
+                        sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "toalets.jpg")) # тут должен быть спрайт обосраного туалета 
                 if number_camera == 2:
                     if not main_data.position["main_prohod_ofise"]:
                         sprite(dis_w-340, dis_h-271, 400, 390, os.path.join(os.getcwd(), "asets", "camers", "holl.png"))

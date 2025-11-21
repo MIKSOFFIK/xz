@@ -28,7 +28,7 @@ def creat_button(x: int, y: int, h: int, w: int, text: str, bord=0, text_color=(
 
     # Подготовка текста 
     text_surf = CONSTANT.font.render(text, True, text_color)
-    text_rect = text_surf.get_rect(center=(button_surface.get_width() / 2,
+    text_rect = text_surf.get_rect(center=(button_surface.get_width() / 2 ,
                                            button_surface.get_height() / 2))
 
     # Рект кнопки (координаты на экране)
